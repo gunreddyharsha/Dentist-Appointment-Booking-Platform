@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+require("dotenv").config();
 const cors = require("cors");
 var cookieParser = require('cookie-parser')
 
@@ -16,20 +17,25 @@ app.use(
     origin: "http://localhost:3000",
     credentials: true,
   }),
-);
+); 
+const db_password=process.env.DB_PASSWORD
 const connectDb = async () => {
   await mongoose.connect(
-    "mongodb+srv://Harsha:"+DB_PASSWORD+"@cluster0.2hwwh7w.mongodb.net/Dentist_appointment_booking",
+    "mongodb+srv://Harsha:" +
+      db_password +
+      "@cluster0.2hwwh7w.mongodb.net/Dentist_appointment_booking",
   );
 };
 app.use("/",appRouter)
 app.use("/", appointmentRouter);
 app.use("/", dentistRoute);
-
+const port=process.env.PORT || 6666
 connectDb()
   .then(() => {
     console.log("dataBase Connected Successfully");
-    app.listen(7777, () => console.log("serconnectedConnected Succssfully"));
+    app.listen(port, () =>
+      console.log("serconnectedConnected Succssfully " + port),
+    );
   })
   .catch(() => {
     console.log("server not connected");
