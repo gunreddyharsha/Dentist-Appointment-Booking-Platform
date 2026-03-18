@@ -23,14 +23,14 @@ appRouter.post("/login", async (req, res) => {
 
   try {
     if (!validator.isEmail(email)) {
-      return res.json({
+      return res.status(401).json({
         message: "enter valid email",
       });
     }
     const userExist = await userModel.findOne({ email });
     if (!userExist) {
       return res.status(401).json({
-        message: "Invalid credentials",
+        message: "user not exists ",
       });
     }
     const correctPassword = await bcrypt.compare(password, userExist.password);
@@ -44,8 +44,8 @@ appRouter.post("/login", async (req, res) => {
     });
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true, // REQUIRED (Render uses HTTPS)
-      sameSite: "None", // REQUIRED for cross-origin
+      secure: true, 
+      sameSite: "None", 
     });
 
     res.status(200).json({
@@ -65,9 +65,9 @@ appRouter.post("/signup", async (req, res) => {
     validataSignupData(req.body, res);
 
     const findUser = await userModel.findOne({ email });
-    console.log(findUser);
+
     if (findUser) {
-      return res.json({
+      return res.status(401).json({
         message: "user already exists",
       });
     }
@@ -86,8 +86,8 @@ appRouter.post("/signup", async (req, res) => {
     });
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true, // REQUIRED (Render uses HTTPS)
-      sameSite: "None", // REQUIRED for cross-origin
+      secure: true, 
+      sameSite: "None", 
     });
     res.status(200).json({
       message: "signup successful",

@@ -17,7 +17,13 @@ dentistRoute.get("/dentists",authUser,async (req ,res)=>{
 dentistRoute.post("/addDentist", async (req, res) => {
   try {
     const { name, photo, Qualification, Experience, Clinic_Name, Address } =
-      req.body;
+      req.body; 
+      const data=await dentistModel.findOne({name}) 
+      if (data){
+        return res.status(401).json({
+            message:"Doctor already present "
+        })
+      }
     const addData = new dentistModel({
       name,
       photo,

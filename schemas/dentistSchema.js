@@ -8,13 +8,14 @@ const dentistSchema = new Schema(
     },
     photo: {
       type: String,
-      required: true,
+      default:
+        "https://tse2.mm.bing.net/th/id/OIP.svSxRO1pZnNQljHQSXT9pAHaHa?pid=Api&P=0&h=180",
     },
     Qualification: {
       type: String,
     },
     Experience: {
-      type: String,
+      type: Number,
     },
     Clinic_Name: {
       type: String,
@@ -22,8 +23,10 @@ const dentistSchema = new Schema(
     Address: {
       type: String,
     },
-  },{
-  timestamps:true,}
-); 
-const dentistModel=mongoose.model("dentistData",dentistSchema)
-module.exports={dentistModel}
+  },
+  {
+    timestamps: true,
+  },
+);
+const dentistModel = mongoose.model("dentistData", dentistSchema);
+module.exports = { dentistModel };

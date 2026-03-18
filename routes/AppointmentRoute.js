@@ -6,11 +6,31 @@ const { authUser } = require("../middleware/auth");
 const appointmentRouter = express.Router();
 
 appointmentRouter.post(
-  "/booking/:name/:age/:gender/:Date/:dentistId/:patientId",
+  "/booking/:name/:age/:gender/:AppointmentDates/:dentistId/:patientId",
   authUser,
   async (req, res) => {
     try {
-      const { name, age, gender, Date, dentistId, patientId } = req.params;
+      const { name, age, gender, AppointmentDates, dentistId, patientId } =
+        req.params; 
+      const inputDate = new Date(AppointmentDates);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      inputDate.setHours(0, 0, 0, 0);
+
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+
+     
+      if (inputDate < tomorrow) {
+        return res.status(401).json({
+          message: "Appointment must be from tomorrow onwards",
+        });
+      } 
+      if(age>80){
+        return res.status(401).json({
+          message: "Age must be less that 80",
+        });
+      }
       const validPatientID = await userModel.findById(patientId);
       const validDentistId = await dentistModel.findById(dentistId);
       if (!validPatientID) {
@@ -25,7 +45,7 @@ appointmentRouter.post(
       }
       const isUserBookedAlready = await BookingModel.findOne({
         patientId,
-        appointmentDate: Date,
+        appointmentDate: AppointmentDates,
         dentistId,
       });
       if (isUserBookedAlready) {
@@ -37,7 +57,7 @@ appointmentRouter.post(
         patientName: name,
         age,
         gender,
-        appointmentDate: Date,
+        appointmentDate: AppointmentDates,
         dentistId,
         patientId,
       });
