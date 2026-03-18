@@ -42,7 +42,12 @@ appRouter.post("/login", async (req, res) => {
     const token = await jsonwebtoken.sign({ _id: userExist._id }, "Dentists", {
       expiresIn: "2d",
     });
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true, // REQUIRED (Render uses HTTPS)
+      sameSite: "None", // REQUIRED for cross-origin
+     
+    });
 
     res.status(200).json({
       message: "login successful",
@@ -81,7 +86,12 @@ appRouter.post("/signup", async (req, res) => {
     const token=await jsonwebtoken.sign({_id:signupUser._id},"Dentists", {
       expiresIn: "2d",
     }) 
-    res.cookie("token",token)
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true, // REQUIRED (Render uses HTTPS)
+      sameSite: "None", // REQUIRED for cross-origin
+      
+    });
     res.status(200).json({
       message: "signup successful", 
       data:signupUser
