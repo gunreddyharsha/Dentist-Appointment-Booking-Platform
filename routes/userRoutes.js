@@ -46,7 +46,6 @@ appRouter.post("/login", async (req, res) => {
       httpOnly: true,
       secure: true, // REQUIRED (Render uses HTTPS)
       sameSite: "None", // REQUIRED for cross-origin
-     
     });
 
     res.status(200).json({
@@ -56,7 +55,6 @@ appRouter.post("/login", async (req, res) => {
   } catch (err) {
     res.status(401).json({
       message: err.message,
-     
     });
   }
 });
@@ -82,29 +80,32 @@ appRouter.post("/signup", async (req, res) => {
       role,
     });
 
-    const signupUser=await newUser.save(); 
-    const token=await jsonwebtoken.sign({_id:signupUser._id},"Dentists", {
+    const signupUser = await newUser.save();
+    const token = await jsonwebtoken.sign({ _id: signupUser._id }, "Dentists", {
       expiresIn: "2d",
-    }) 
+    });
     res.cookie("token", token, {
       httpOnly: true,
       secure: true, // REQUIRED (Render uses HTTPS)
       sameSite: "None", // REQUIRED for cross-origin
-      
     });
     res.status(200).json({
-      message: "signup successful", 
-      data:signupUser
+      message: "signup successful",
+      data: signupUser,
     });
   } catch (err) {
-   res.status(401).json({
-     message: err.message,
-   });
+    res.status(401).json({
+      message: err.message,
+    });
   }
 });
 
 appRouter.post("/logout", (req, res) => {
-  res.cookie("token", null, { expires: new Date(Date.now()) });
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+  });
   //res.clearCookie();
   res.json({
     message: "logout Successfullly",
