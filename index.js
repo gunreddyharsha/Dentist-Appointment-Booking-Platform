@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser')
 const { appRouter } = require("./routes/userRoutes");
 const { appointmentRouter } = require("./routes/AppointmentRoute");
 const { dentistRoute } = require("./routes/dentistRoute");
+const { DB_PASSWORD } = require("./utilis/constants");
 
 const app = express();
 app.use(express.json());
@@ -18,7 +19,7 @@ app.use(
 );
 const connectDb = async () => {
   await mongoose.connect(
-    "mongodb+srv://Harsha:Td8nvXBaneI7zrma@cluster0.2hwwh7w.mongodb.net/Dentist_appointment_booking",
+    "mongodb+srv://Harsha:"+DB_PASSWORD+"@cluster0.2hwwh7w.mongodb.net/Dentist_appointment_booking",
   );
 };
 app.use("/",appRouter)
